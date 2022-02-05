@@ -7,7 +7,10 @@ terraform {
   }
 }
 
-provider "hashicups" {}
+provider "hashicups" {
+  username = "education"
+  password = "test123"
+}
 
 module "psl" {
   source = "./coffee"
@@ -15,6 +18,35 @@ module "psl" {
   coffee_name = "Packer Spiced Latte"
 }
 
+data "hashicups_order" "order" {
+  id = 1
+}
+
+output "order" {
+  value = data.hashicups_order.order
+}
+
 output "psl" {
   value = module.psl.coffee
 }
+
+resource "hashicups_order" "edu" {
+  items {
+    coffee {
+      id = 3
+    }
+    quantity = 2
+  }
+  items {
+    coffee {
+      id = 2
+    }
+    quantity = 3
+  }
+}
+
+output "edu_order" {
+  value = hashicups_order.edu
+}
+
+
